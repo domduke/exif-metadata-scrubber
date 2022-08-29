@@ -3,8 +3,11 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import piexif from 'piexifjs';
 import { getBase64 } from './getBase64';
+import { rationalToDecimal, formatAltitude } from './formatAltitude'
 import Logo from './logo.png';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap'
+import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import InputGroup from 'react-bootstrap/InputGroup';
+
 function App() {
 
   const [image, setImage] = useState(null)
@@ -41,12 +44,12 @@ function App() {
       </Col>
       </Row>
       <Row className="mb-3">
-        {/* <div>Upload a Photo</div> */}
-        {/* <Form.Group as="Row">
-        <Form.File type="file" label="Upload JPEG" />
-        </Form.Group> */}
+
         <Col>
-        <input className="mb-3" type="file" accept="image/*" onChange={onImageChange}/>
+        {/* <input className="mb-3" type="file" accept="image/*" onChange={onImageChange}/> */}
+        <InputGroup className="mb-3">
+        <Form.Control type="file" accept="image/*" label="Choose image" onChange={onImageChange}/>
+      </InputGroup>
         <div className=""><Button variant="primary" download="scrubbed.jpg" href={scrubbedImage}>Download Scrubbed Image</Button></div>
         </Col>
         </Row>
@@ -65,12 +68,13 @@ function App() {
         </Col>
         <Col xs="12" md="4">
         <h2>Location</h2>
-        <p>Latitude: {exifData?.['GPS'] &&  exifData['GPS'][piexif.GPSIFD.GPSLatitude]}</p>
-        <p>Longitude: {exifData?.['GPS'] && exifData['GPS'][piexif.GPSIFD.GPSLongitude]}</p>
+        <p>Latitude: {exifData?.['GPS'] &&  `${exifData['GPS'][piexif.GPSIFD.GPSLatitude]} ${exifData['GPS'][piexif.GPSIFD.GPSLatitudeRef]}`}</p>
+        <p>Longitude: {exifData?.['GPS'] && `${exifData['GPS'][piexif.GPSIFD.GPSLongitude]} ${exifData['GPS'][piexif.GPSIFD.GPSLongitudeRef]}`}</p>
+        <p>Altitude: {exifData?.['GPS'] && formatAltitude(rationalToDecimal(exifData['GPS'][piexif.GPSIFD.GPSAltitude]), exifData['GPS'][piexif.GPSIFD.GPSAltitudeRef])}</p>
         </Col>
         </Row>}
 
-      
+
       
     </Container>
   );
