@@ -38,10 +38,19 @@ function App() {
   return (
     <Container>
       <Row className="mb-3">
-        <Col>
-      <img src={Logo} style={{display: "inline-block", maxWidth: '80px'}}alt="logo"/><h1>Exif Metadata Scrubber</h1>
-      {image && <img src={image} style={{maxWidth: '200px'}} alt="uploaded"/>}
+        <Col xs="12" className="align-middle">
+      <img src={Logo} style={{maxWidth: '60px', paddingRight: '10px  '}}alt="logo"/>
+      <h1 style={{marginBottom: '-15px'}}>Exif Metadata Scrubber</h1>
       </Col>
+      </Row>
+      <Row>
+        <p>
+          Photos taken by smartphones and digital cameras can contain a lot of private information. Use this free tool to view and remove all metadata from your images.
+        </p>
+      </Row>
+      <Row className="mb-3" >
+      {image && <img src={image} style={{maxWidth: '200px'}} alt="uploaded"/>}
+
       </Row>
       <Row className="mb-3">
 
@@ -50,7 +59,7 @@ function App() {
         <InputGroup className="mb-3">
         <Form.Control type="file" accept="image/*" label="Choose image" onChange={onImageChange}/>
       </InputGroup>
-        <div className=""><Button variant="primary" download="scrubbed.jpg" href={scrubbedImage}>Download Scrubbed Image</Button></div>
+        <Button variant="primary" download="scrubbed.jpg" href={scrubbedImage}>Remove Exif Data</Button>
         </Col>
         </Row>
       {image && <Row>
@@ -59,7 +68,6 @@ function App() {
         <p>Make: {exifData && exifData['0th'][piexif.ImageIFD.Make]}</p>
         <p>Model: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.Model]}</p>
         <p>Software: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.Software]}</p>
-        <p>Orientation: </p>
         </Col>
         <Col xs="12" md="4">
         <h2>Date/time taken</h2>
@@ -68,9 +76,9 @@ function App() {
         </Col>
         <Col xs="12" md="4">
         <h2>Location</h2>
-        <p>Latitude: {exifData?.['GPS'] &&  `${exifData['GPS'][piexif.GPSIFD.GPSLatitude]} ${exifData['GPS'][piexif.GPSIFD.GPSLatitudeRef]}`}</p>
-        <p>Longitude: {exifData?.['GPS'] && `${exifData['GPS'][piexif.GPSIFD.GPSLongitude]} ${exifData['GPS'][piexif.GPSIFD.GPSLongitudeRef]}`}</p>
-        <p>Altitude: {exifData?.['GPS'] && formatAltitude(rationalToDecimal(exifData['GPS'][piexif.GPSIFD.GPSAltitude]), exifData['GPS'][piexif.GPSIFD.GPSAltitudeRef])}</p>
+        <p>Latitude: {exifData?.['GPS']?.[piexif.GPSIFD.GPSLatitude] &&  `${exifData['GPS'][piexif.GPSIFD.GPSLatitude]} ${exifData['GPS'][piexif.GPSIFD.GPSLatitudeRef]}`}</p>
+        <p>Longitude: {exifData?.['GPS']?.[piexif.GPSIFD.GPSLongitude] && `${exifData['GPS'][piexif.GPSIFD.GPSLongitude]} ${exifData['GPS'][piexif.GPSIFD.GPSLongitudeRef]}`}</p>
+        <p>Altitude: {exifData?.['GPS']?.[piexif.GPSIFD.GPSAltitude] && formatAltitude(rationalToDecimal(exifData['GPS'][piexif.GPSIFD.GPSAltitude] || 0), exifData['GPS'][piexif.GPSIFD.GPSAltitudeRef])}</p>
         </Col>
         </Row>}
 
