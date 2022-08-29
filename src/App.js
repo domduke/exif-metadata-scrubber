@@ -5,13 +5,14 @@ function App() {
 
   const [image, setImage] = useState(null);
   const [exifData, setExifData] = useState(null);
-
+  const [scrubbedImage, setScrubbedImage] = useState(null);
   const onImageChange = async (e) => {
     setImage(URL.createObjectURL(e.target.files[0]))
     const base64Image = await getBase64(e.target.files[0])
     setExifData(piexif.load(base64Image))
-    // debugExif(piexif.load(base64Image))
+    
     console.log(piexif.load(base64Image))
+    setScrubbedImage(piexif.remove(base64Image));
   }
 
   const getBase64 = file => {
@@ -50,8 +51,10 @@ function App() {
 
   return (
     <div className="App">
-      {image && <img src={image} style={{maxWidth: '200px'}} alt="uploaded"/>}
       <h1>Exif Metadata Scrubber</h1>
+      {image && <img src={image} style={{maxWidth: '200px'}} alt="uploaded"/>}
+      <div><a download="scrubbed.jpg" href={scrubbedImage}>Download Scrubbed Image</a></div>
+
       <form>
         <h2>Your Device</h2>
         <p>Make: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.Make]}</p>
@@ -60,14 +63,15 @@ function App() {
         <p>Orientation: </p>
 
         <h2>Date/time taken</h2>
-        <p>Date: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.DateTime].substring(0, 10).replaceAll(':', " ")}</p>
-        <p>Time: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.DateTime].substring(11, 19)}</p>
+        <p>Date: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.DateTime]?.substring(0, 10).replaceAll(':', " ")}</p>
+        <p>Time: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.DateTime]?.substring(11, 19)}</p>
 
         <h2>Location</h2>
         <p>Latitude: {exifData?.['GPS'] &&  exifData['GPS'][piexif.GPSIFD.GPSLatitude]}</p>
         <p>Longitude: {exifData?.['GPS'] && exifData['GPS'][piexif.GPSIFD.GPSLongitude]}</p>
-
+        <div>Upload a Photo</div>
         <input type="file" accept="image/*" onChange={onImageChange}/>
+
       </form>
     </div>
   );
