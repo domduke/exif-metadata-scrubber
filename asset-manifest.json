@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/exif-metadata-scrubber/static/css/main.e6c13ad2.css",
+    "main.js": "/exif-metadata-scrubber/static/js/main.7d227270.js",
+    "static/js/787.6c2b96b1.chunk.js": "/exif-metadata-scrubber/static/js/787.6c2b96b1.chunk.js",
+    "index.html": "/exif-metadata-scrubber/index.html",
+    "main.e6c13ad2.css.map": "/exif-metadata-scrubber/static/css/main.e6c13ad2.css.map",
+    "main.7d227270.js.map": "/exif-metadata-scrubber/static/js/main.7d227270.js.map",
+    "787.6c2b96b1.chunk.js.map": "/exif-metadata-scrubber/static/js/787.6c2b96b1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.7d227270.js"
+  ]
+}
