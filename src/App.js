@@ -7,10 +7,10 @@ function App() {
   const [exifData, setExifData] = useState(null);
 
   const onImageChange = async (e) => {
-    console.log(e.target.value)
-    setImage(URL.createObjectURL(e.target.files[0]));
-    const base64Image = await getBase64(e.target.files[0]);
+    setImage(URL.createObjectURL(e.target.files[0]))
+    const base64Image = await getBase64(e.target.files[0])
     setExifData(piexif.load(base64Image))
+    // debugExif(piexif.load(base64Image))
     console.log(piexif.load(base64Image))
   }
 
@@ -34,27 +34,39 @@ function App() {
     });
   };
 
+  function debugExif(exif) {
+    for (const ifd in exif) {
+        if (ifd === 'thumbnail') {
+            const thumbnailData = exif[ifd] === null ? "null" : exif[ifd];
+            console.log(`- thumbnail: ${thumbnailData}`);
+        } else {
+            console.log(`- ${ifd}`);
+            for (const tag in exif[ifd]) {
+                console.log(`    - ${piexif.TAGS[ifd][tag]['name']}: ${exif[ifd][tag]}`);
+            }
+        }
+    }
+}
+
   return (
     <div className="App">
-      {image && <img src={image} alt="uploaded image"/>}
+      {image && <img src={image} style={{maxWidth: '200px'}} alt="uploaded"/>}
       <h1>Exif Metadata Scrubber</h1>
       <form>
         <h2>Your Device</h2>
-        <p>Make: </p>
-        <p>Model: </p>
-        <p>OS version: </p>
+        <p>Make: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.Make]}</p>
+        <p>Model: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.Model]}</p>
+        <p>Software: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.Software]}</p>
         <p>Orientation: </p>
 
         <h2>Date/time taken</h2>
-        <p>Date: </p>
-        <p>Time: </p>
+        <p>Date: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.DateTime].substring(0, 10).replaceAll(':', " ")}</p>
+        <p>Time: {exifData?.['0th'] && exifData['0th'][piexif.ImageIFD.DateTime].substring(11, 19)}</p>
 
         <h2>Location</h2>
-        <p>Longitude:</p>
-        <p>Latitude:</p>
+        <p>Latitude: {exifData?.['GPS'] &&  exifData['GPS'][piexif.GPSIFD.GPSLatitude]}</p>
+        <p>Longitude: {exifData?.['GPS'] && exifData['GPS'][piexif.GPSIFD.GPSLongitude]}</p>
 
-        <h2>Speed</h2>
-        <p>Speed:</p>
         <input type="file" accept="image/*" onChange={onImageChange}/>
       </form>
     </div>
